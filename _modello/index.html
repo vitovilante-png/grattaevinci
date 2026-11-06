@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E1712">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="{{NOME}}">
+<title>{{NOME}}</title>
+<meta property="og:title" content="{{NOME}} · Gratta e vinci">
+<meta property="og:description" content="Gratta la cartolina e scopri il tuo premio.">
+<link rel="icon" href="../icona.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icona-180.png">
+<style>
+  html, body { margin: 0; height: 100%; background: #0E1712; overflow: hidden; }
+  [hidden] { display: none !important; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: transparent; }
+  .loading {
+    position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+    color: #E9D08E; font: 600 1.05rem/1.4 Georgia, "Times New Roman", serif; letter-spacing: .12em; text-transform: uppercase; text-align: center; padding: 24px;
+  }
+  .loading i { width: 30px; height: 30px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: s 1s linear infinite; opacity: .8; }
+  @keyframes s { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .loading i { animation: none; } }
+  .blocco { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 28px; text-align: center; color: #F2EDE1; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .blocco h1 { margin: 0; font: 400 1.8rem/1.15 Georgia, serif; color: #E9D08E; }
+  .blocco p { margin: 0; max-width: 34ch; color: #A7B1A3; }
+  .blocco.chiaro { color: #2A1A14; } .blocco.chiaro h1 { color: #8E1F12; } .blocco.chiaro p { color: #7A6253; }
+  .scan { position: fixed; inset: 0; z-index: 10; background: #000; color: #F2EDE1; font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; display: flex; flex-direction: column; }
+  .scan video { flex: 1; min-height: 0; width: 100%; object-fit: cover; background: #000; }
+  .scan .frame { position: absolute; left: 50%; top: 45%; width: min(70vw, 300px); aspect-ratio: 1; transform: translate(-50%, -50%); border: 3px solid #E9D08E; border-radius: 18px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.45); pointer-events: none; }
+  .scan .bar { padding: 16px max(16px, env(safe-area-inset-right, 0px)) max(18px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: #0E1712; border-top: 1px solid #8E6E28; display: flex; flex-direction: column; gap: 10px; text-align: center; }
+  .scan .msg { margin: 0; } .scan .msg.err { color: #E58A78; font-weight: 600; }
+  .scan button { font: inherit; font-weight: 700; padding: 13px 18px; border-radius: 12px; cursor: pointer; border: 1px solid #8E6E28; background: linear-gradient(135deg, #8E6E28, #E9D08E 45%, #C9A24A 60%, #8E6E28); color: #1A1408; }
+  .scan .top { position: absolute; top: max(14px, env(safe-area-inset-top, 0px)); left: 0; right: 0; text-align: center; font: 700 .85rem/1 Georgia, serif; letter-spacing: .18em; text-transform: uppercase; color: #E9D08E; text-shadow: 0 1px 4px #000; }
+</style>
+</head>
+<body>
+  <div class="loading" id="loading"><i></i>{{NOME}}</div>
+  <div class="blocco" id="blocco" hidden><h1 id="bloccoTitolo"></h1><p id="bloccoTesto"></p></div>
+  <div class="scan" id="scan" hidden role="dialog" aria-modal="true" aria-label="Scansione del QR premio">
+    <video id="video" playsinline muted></video>
+    <div class="frame" aria-hidden="true"></div>
+    <div class="top">Inquadra il QR del premio</div>
+    <div class="bar">
+      <p class="msg" id="scanMsg">Tieni il QR del cliente dentro il riquadro.</p>
+      <button type="button" id="scanClose">Annulla</button>
+    </div>
+  </div>
+  <script>window.SLUG = "{{SLUG}}";</script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  <script src="../ponte.js"></script>
+</body>
+</html>

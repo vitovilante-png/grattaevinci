@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kit attività · Gratta e Vinci Pro</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../icona.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Figtree:wght@400;600;700&display=swap">
+<style>
+/* Kit da consegnare all'attività: tre link con i QR, pronti da stampare o inquadrare */
+:root { --bg: #0E1712; --surface: #16231B; --ink: #F2EDE1; --muted: #A7B1A3; --line: #2E4034; --gold: #C9A24A; --gold-light: #E9D08E; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Figtree", system-ui, sans-serif; line-height: 1.5; }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 28px 44px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 20px; }
+.eyebrow { margin: 0; font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 700; text-align: center; }
+h1 { margin: 0; font-family: "Cinzel", Georgia, serif; color: var(--gold-light); letter-spacing: .05em; text-align: center; font-size: clamp(1.6rem, 6vw, 2.2rem); text-wrap: balance; }
+.intro { margin: 0 auto; color: var(--muted); text-align: center; max-width: 60ch; }
+.stato { align-self: center; font-size: .82rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--gold); color: var(--gold-light); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.card h2 { margin: 0; font-family: "Cinzel", Georgia, serif; font-size: 1rem; letter-spacing: .1em; color: var(--gold); }
+.card p { margin: 0; color: var(--muted); font-size: .9rem; }
+.qr { background: #fff; padding: 10px; border-radius: 12px; line-height: 0; }
+.qr img { width: 190px; height: 190px; image-rendering: pixelated; }
+.url { font-size: .74rem; color: var(--muted); word-break: break-all; background: var(--bg); padding: 8px; border-radius: 8px; border: 1px solid var(--line); width: 100%; user-select: all; }
+.err { text-align: center; color: #E58A78; font-weight: 600; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">Gratta e Vinci Pro · kit attività</p>
+  <h1 id="nome">Caricamento…</h1>
+  <span class="stato" id="stato" hidden></span>
+  <p class="intro">Questi sono i tuoi link. Inquadra il QR <b>Back office</b> con il telefono e aggiungilo alla schermata Home: da lì crei i QR dei dolci, verifichi i premi e cambi premi, foto, colori e logo (PIN titolare iniziale 9999, camerieri 1234: cambiali subito).</p>
+  <p class="err" id="err" hidden></p>
+  <div class="grid" id="grid"></div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+const slug = (new URLSearchParams(location.search).get("a") || "").toLowerCase();
+const base = location.origin + "/grattaevinci/" + slug + "/";
+const $ = id => document.getElementById(id);
+const voci = [
+  ["Back office", base + "?p=staff", "Per te e i camerieri: QR dei dolci, verifica premi, impostazioni."],
+  ["Gioco al tavolo", base, "Il gioco dei clienti. Al tavolo si gioca con il QR del dolce creato dal back office."],
+  ["Torna da noi", base + "torna/", "Link unico da mandare su WhatsApp ai clienti che non vengono da tempo."]
+];
+fetch("../clienti.json?v=" + Date.now(), { cache: "no-store" }).then(r => r.json()).then(db => {
+  const c = db.attivita && db.attivita[slug];
+  if (!c) { $("nome").textContent = "Attività non trovata"; $("err").hidden = false; $("err").textContent = "Controlla il link del kit."; return; }
+  $("nome").textContent = c.nome;
+  document.title = "Kit · " + c.nome;
+  if (c.stato === "prova" && c.fino) { $("stato").hidden = false; $("stato").textContent = "Prova gratuita fino al " + c.fino.split("-").reverse().join("/"); }
+  voci.forEach(([t, u, d]) => {
+    const el = document.createElement("section"); el.className = "card";
+    const h = document.createElement("h2"); h.textContent = t;
+    const q = document.createElement("div"); q.className = "qr";
+    const qr = qrcode(0, "M"); qr.addData(u); qr.make();
+    const img = document.createElement("img"); img.src = qr.createDataURL(8, 0); img.alt = "QR " + t; q.append(img);
+    const p = document.createElement("p"); p.textContent = d;
+    const url = document.createElement("div"); url.className = "url"; url.textContent = u;
+    el.append(h, q, p, url); $("grid").append(el);
+  });
+}).catch(() => { $("nome").textContent = "Connessione non riuscita"; });
+</script>
+</body>
+</html>

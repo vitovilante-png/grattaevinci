@@ -1,0 +1,16 @@
+{
+  "fornitore": {
+    "nome": "Gratta e Vinci Pro",
+    "contatto": ""
+  },
+  "modello": "https://docs.google.com/spreadsheets/d/1xlqoia7DoMx1HOiT0GUn-rXTC67U_F6K419keyyOjx4/copy",
+  "attivita": {
+    "demo": {
+      "nome": "Pizzeria Demo",
+      "app": "https://script.google.com/macros/s/AKfycbxk96WLgcM595zx3wfpKZhEk3WovFWAHl5V8lq7PS7c-il0tuox89R-kZeaZXChIwXT/exec",
+      "stato": "attivo",
+      "fino": "",
+      "creato": "2026-11-06"
+    }
+  }
+}

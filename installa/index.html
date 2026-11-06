@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Installazione · Gratta e Vinci Pro</title>
+<link rel="icon" href="../icona.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Figtree:wght@400;600;700&display=swap">
+<style>
+/* Guida di installazione per l'attività: 4 passi numerati (sono davvero una sequenza) */
+:root { --bg: #0E1712; --surface: #16231B; --ink: #F2EDE1; --muted: #A7B1A3; --line: #2E4034; --gold: #C9A24A; --gold-light: #E9D08E; --gold-dark: #8E6E28; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Figtree", system-ui, sans-serif; line-height: 1.55; }
+.wrap { max-width: 720px; margin: 0 auto; padding-block: 32px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 18px; }
+.eyebrow { margin: 0; font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+h1 { margin: 0; font-family: "Cinzel", Georgia, serif; color: var(--gold-light); font-size: clamp(1.7rem, 6vw, 2.4rem); letter-spacing: .04em; text-wrap: balance; }
+.lead { margin: 0; color: var(--muted); max-width: 60ch; }
+ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; counter-reset: passo; }
+li { counter-increment: passo; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 16px 16px 60px; position: relative; }
+li::before { content: counter(passo); position: absolute; left: 16px; top: 14px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #1A1408; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light) 45%, var(--gold) 60%, var(--gold-dark)); }
+li b.t { display: block; color: var(--gold-light); margin-bottom: 4px; }
+li p { margin: 4px 0 0; color: var(--muted); }
+.btn { display: inline-block; margin-top: 10px; text-decoration: none; font-weight: 700; padding: 11px 16px; border-radius: 10px; color: #1A1408; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light) 45%, var(--gold) 60%, var(--gold-dark)); }
+.btn[aria-disabled="true"] { opacity: .5; pointer-events: none; }
+code { background: var(--bg); padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); font-size: .9em; }
+.nota { font-size: .88rem; color: var(--muted); margin: 0; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">Gratta e Vinci Pro</p>
+  <h1>Installa il tuo gratta e vinci</h1>
+  <p class="lead">Ci vogliono circa 10 minuti, da computer. Ti serve un account Google (meglio quello dell'attività): il gioco e i dati dei tuoi clienti restano nel <b>tuo</b> Google Drive.</p>
+  <ol>
+    <li><b class="t">Crea la tua copia</b>
+      Premi il pulsante e poi <b>Crea una copia</b>. Nel tuo Google Drive comparirà il Foglio "Gratta e Vinci Pro".
+      <br><a class="btn" id="copia" href="#" aria-disabled="true">Crea la mia copia</a>
+    </li>
+    <li><b class="t">Installa</b>
+      Apri la tua copia. In alto compare il menu <b>Gratta e Vinci Pro</b> (se non c'è, ricarica la pagina): scegli <b>1. Installa</b>.
+      <p>Google chiede l'autorizzazione: <b>Continua</b> → scegli il tuo account → <b>Avanzate</b> → <b>Vai a … (non sicuro)</b> → <b>Consenti</b>. Compare "non sicuro" solo perché l'app non è nel catalogo di Google: gira nel tuo account e la usi solo tu.</p>
+    </li>
+    <li><b class="t">Pubblica l'app</b>
+      Menu <b>Estensioni → Apps Script</b> → in alto a destra <b>Implementa → Nuova implementazione</b> → ingranaggio → <b>App web</b>.
+      <p>Imposta <b>Esegui come: Me</b> e <b>Chi può accedere: Chiunque</b>, poi <b>Implementa</b> e copia l'<b>URL dell'app web</b> (finisce con <code>/exec</code>).</p>
+    </li>
+    <li><b class="t">Mandaci l'indirizzo</b>
+      Invia l'URL a chi ti ha proposto il servizio insieme al nome della tua attività. Riceverai il tuo <b>link dedicato</b> con i QR code e <b>14 giorni di prova gratuita</b>.
+    </li>
+  </ol>
+  <p class="nota">Dopo l'attivazione, dal back office (PIN titolare iniziale <code>9999</code>, camerieri <code>1234</code>) imposti nome, logo, colori, premi e foto. Cambia subito i PIN in <b>Impostazioni attività</b>.</p>
+</main>
+<script>
+fetch("../clienti.json?v=" + Date.now(), { cache: "no-store" }).then(r => r.json()).then(db => {
+  if (db.modello) { const a = document.getElementById("copia"); a.href = db.modello; a.target = "_blank"; a.rel = "noopener"; a.removeAttribute("aria-disabled"); }
+}).catch(() => {});
+</script>
+</body>
+</html>
